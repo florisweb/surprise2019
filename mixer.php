@@ -10,13 +10,24 @@
 				height: calc(100vh - 30px * 1 - 30px);
 			}
 
-			#mixerCanvas {
+			#mixPanCanvas {
 				position: relative;
-				top: 0;
-				width: calc(80vw);
+				top: calc(((100vh - 30px * 2 - 10px * 2 * 2 - 30px) - 80vw) / 2);
+				width: calc(60vw);
 				height: auto;
-				box-shadow: 10px 10px 50px 20px rgba(0, 0, 0, .1);
-				border-radius: 100%;
+			}
+			
+			#ingredientDropIn {
+				position: absolute;
+				left: calc(50vw - 20vw);
+				top: -50vh;
+				width: calc(40vw);
+				height: auto;
+				transition: all .3s;
+			}
+
+			#ingredientDropIn.drop {
+				top: 30vh;
 			}
 
 		</style>
@@ -26,66 +37,72 @@
 	<body>
 		<div id="mainContentHolder">
 			<div class="centerAligner" id="mainContent">
-				<canvas id="mixerCanvas" width="500" height="500"></canvas>
+				<img id="ingredientDropIn" class="drop">
+				<canvas id="mixPanCanvas" width="500" height="500"></canvas>
 			</div>
 		</div>
 
 
 		<div id="bottomBar">
 			<div class="centerAligner" style="max-width: 160px">
-				<div class="button bDefault clickable">Voeg ingredient toe</div>
+				<div class="button bDefault clickable" onclick="dropIngredient()">Voeg ingredient toe</div>
 			</div>
 		</div>
 		<a id="info" style="position: fixed;">hey</a>
 
 
 		<script>
+			const Mixer = new function() {
+				this.progress = 0;
+
+			}
 
 			const Drawer = new function() {
-				const Canvas = mixerCanvas;
+				const Canvas = mixPanCanvas;
 				const ctx = Canvas.getContext("2d");
-				
-				ctx.constructor.prototype.circle = function(x, y, size) {
-				    if (size < 0) return;
 
-				    this.beginPath();
-				    this.ellipse(
-				      x, 
-				      y, 
-				      size,
-				      size,
-				      0,
-				      0,
-				      2 * Math.PI
-				    );
-				    this.closePath();
+				let This = {
+					drawPan: drawPan,
 				}
+				return This;
 
-				function drawPan() {
-					const stepSize = 5;
-					ctx.fillStyle = "#888";
-					for (let i = 0; i < 100; i += stepSize)
-					{
-						ctx.lineWidth = stepSize;
-						let grayScaleVal = -i / 200 * 100 + 190;
+				function drawPan(_progress) {
+					const sideWidth = 25;
+					const panHeight = Canvas.height - sideWidth;
 
-						ctx.strokeStyle = "rgb(" + grayScaleVal + ", " + grayScaleVal + ", " + grayScaleVal + ")";
-						ctx.circle(Canvas.width / 2, Canvas.height / 2, 248 - i);
-						ctx.stroke();
-					}
+					ctx.lineWidth = sideWidth * 2;
+					ctx.strokeStyle = "#000";
+					ctx.strokeRect(0, 0, Canvas.width, Canvas.height);
+					ctx.stroke();
 
+					ctx.fillStyle = "#fff";
+					ctx.fillRect(sideWidth, 0, Canvas.width - 2 * sideWidth, Canvas.height - sideWidth);
+					ctx.fill();
+
+					ctx.fillStyle = "#f00";
+					ctx.fillRect(sideWidth, panHeight * (1 - _progress), Canvas.width - 2 * sideWidth, panHeight * _progress);
 					ctx.fill();
 				}
 
-				drawPan();
-			};
+			}
+
+
+			function dropIngredient() {
+				ingredientDropIn.style.transition = "all 0s";
+				ingredientDropIn.classList.remove("drop");
+				ingredientDropIn.setAttribute("src", "images/egg.png");
+				setTimeout(function () {
+					ingredientDropIn.style.transition = "";
+					ingredientDropIn.classList.add("drop");
+				}, 100);
+			}
 
 
 
 			(function() {
 				let progress = 0;
 				const target = 12000;
-				const minimumChange = .3;
+				const minimumChange = .8;
 				let finished = false;
 
 				window.addEventListener('devicemotion', function(event) {  
@@ -95,13 +112,16 @@
 				  if (vx < minimumChange && vx > -minimumChange) vx = 0;
 				  if (vy < minimumChange && vy > -minimumChange) vy = 0;
 
-				  Canvas.style.marginLeft = vx * 20 + "px";
-				  Canvas.style.marginTop = vy * 20 + "px";
+				  mixPanCanvas.style.marginLeft = vx * 20 + "px";
+				  mixPanCanvas.style.transform = "rotateZ(" + vy * 2 + "deg)";
 
 				  progress += Math.abs(vx) + Math.abs(vy);
 				  if (progress / target > 1) finished = true;
 				  if (finished) return;
-				  info.innerHTML = Math.round(progress / target * 1000) / 10 + "%";
+
+				  Mixer.progress = progress / target;
+				  info.innerHTML = Math.round(Mixer.progress * 1000) / 10; + "%";
+				  Drawer.drawPan(Mixer.progress);
 				});
 			})();
 		</script>
