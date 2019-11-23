@@ -133,26 +133,32 @@
 						ctx.fillStyle = ingredient.substanceColour;
 						ctx.fillRect(
 							sideWidth, 
-							panHeight - addedUnits * unitHeigth, 
+							panHeight - addedUnits * unitHeigth,
 							Canvas.width - 2 * sideWidth, 
 							ingredient.size * unitHeigth
 						);
 						ctx.fill();
+					}
 
-						if (i == 0) continue;
+					addedUnits = Mixer.addedIngredients[0].size;
 
+					const gradientHeight = 190 * _mixPercentage;
+
+					for (let i = 1; i < Mixer.addedIngredients.length; i++) 
+					{
 						let prevIngredient = Mixer.addedIngredients[i - 1];
-
-						const gradientHeight = 200 * _mixPercentage;
-
-						let gradientY = panHeight - (addedUnits - ingredient.size) * unitHeigth - gradientHeight / 2;
+						let ingredient = Mixer.addedIngredients[i];
 						
+						let gradientY = panHeight - addedUnits * unitHeigth - gradientHeight / 2;
+						addedUnits += ingredient.size;
+
 						var grd = ctx.createLinearGradient(
 							sideWidth, 
 							gradientY, 
 						 	sideWidth, 
 						 	gradientY + gradientHeight
 						);
+
 						grd.addColorStop(0, ingredient.substanceColour);
 						grd.addColorStop(1, prevIngredient.substanceColour);
 						
@@ -175,7 +181,7 @@
 
 			(function() {
 				let progress = 0;
-				const target = 12000;
+				const target = 1200;
 				const minimumChange = .8;
 				let finished = false;
 
@@ -187,7 +193,7 @@
 				  if (vy < minimumChange && vy > -minimumChange) vy = 0;
 
 				  mixPanCanvas.style.marginLeft = vx * 20 + "px";
-				  mixPanCanvas.style.transform = "rotateZ(" + vy * 2 + "deg)";
+				  mixPanCanvas.style.transform = "rotateZ(" + vy * 4 + "deg)";
 
 				  progress += Math.abs(vx) + Math.abs(vy);
 				  if (progress / target > 1) finished = true;
