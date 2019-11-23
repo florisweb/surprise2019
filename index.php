@@ -15,9 +15,9 @@
 		</div>
 
 		<div id="mainContentHolder">
-			<div class="centerAligner" id="mainContent"></div>
-			<div id="mainContent"></div>
-			
+			<div class="centerAligner" id="mainContent">
+				
+			</div>
 		</div>
 
 
