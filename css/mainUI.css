@@ -1,0 +1,130 @@
+html {
+	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+	position: fixed;
+	width: 100vw;
+	height: 100vh;
+	background: #eee;
+}
+
+
+
+
+#topBar, #bottomBar, #mainContentHolder {
+	position: fixed;
+	left: 0;
+	width: calc(100vw - 2 * 10px);
+	padding: 10px;
+}
+
+#topBar, #bottomBar {
+	height: 30px;
+}
+
+
+
+#topBar {
+	top: 0;
+	background: #739aff;
+	box-shadow: 5px 5px 20px 10px rgba(0, 0, 0, .05);
+}
+
+#bottomBar {
+	bottom: 0;
+	padding-bottom: 30px;
+}
+
+
+
+
+
+
+#mainContentHolder {
+	top: calc(30px + 10px * 2);
+	height: calc(100vh - 30px * 2 - 10px * 2 * 2 - 30px);
+	text-align: center;
+}
+
+
+#mainContent.centerAligner {
+	border: 1px solid blue;
+}
+
+
+
+
+
+.centerAligner {
+	position: relative;
+	margin: auto;
+	
+	width: auto;
+	max-width: 1000px;
+	height: 100%;
+
+	transition: all .3s;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.button {
+	position: relative;
+	width: auto;
+	padding: 7px 15px !important;
+
+	border-radius: 30px;
+	font-size: 13px;
+	text-align: center;
+}
+	.button.bBoxy {
+		border-radius: 4px;	
+	}
+
+	.button.bDefault {
+		/*background: #7592BF !important;*/
+		background: rgb(140, 153, 247) !important;
+		color: #fff !important;
+	}
+	.button.bWarn {
+		background: #ff632c !important;
+		color: #fff !important;
+	}
+
+.clickable {cursor: pointer;}
+
+
+
+
+.inputField {
+	position: relative;
+	left: 0;
+	padding: 7px 3px;
+	height: 32px;
+	border-radius: 30px;
+	background: transparent;
+
+	border: 2px solid #f3f3f3;
+	outline: none;
+}
+	.inputField.iBoxy {
+		border-radius: 3px;
+	}
+
+
+
+
+
+
+
