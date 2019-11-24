@@ -47,12 +47,13 @@
 				width: calc(100% - 5px * 2);
 				padding: 0 5px;
 			}
-
+			#panImageHolder {display: none}
 		</style>
 
 		<title>Mixer - Surprise 2019</title>
 	</head>
 	<body>
+		<img id="panImageHolder" src="images/pan.png">
 		<div id="mainContentHolder">
 			<a class="text mainHeader" id="mixPercentageHolder">0%</a>
 			<div class="centerAligner" id="mainContent">
@@ -174,17 +175,11 @@
 				const panHeight = Canvas.height - sideWidth;
 
 				function drawPan(_mixPercentage) {
-					ctx.lineWidth = sideWidth * 2;
-					ctx.strokeStyle = "#000";
-					ctx.strokeRect(0, 0, Canvas.width, Canvas.height);
-					ctx.stroke();
-
-					ctx.fillStyle = "#fff";
-					ctx.fillRect(sideWidth, 0, Canvas.width - 2 * sideWidth, Canvas.height - sideWidth);
-					ctx.fill();
-
-
+					ctx.clearRect(0, 0, Canvas.width, Canvas.height);
 					if (Mixer.addedIngredients.length) drawIngedients(_mixPercentage);
+
+					var panImg = document.getElementById("panImageHolder");
+  					ctx.drawImage(panImg, 0, 0, Canvas.width, Canvas.height);
 				}
 
 				function drawIngedients(_mixPercentage) {
