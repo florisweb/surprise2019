@@ -3,7 +3,7 @@
 	<head>
 		<link rel="stylesheet" type="text/css" href="css/mainUI.css">
 		<meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0' name='viewport'/>
-		<meta name="theme-color" content="#636ad5">
+		<meta id="themeColour" name="theme-color" content="#636ad5">
 		<style>
 
 			#mainContentHolder {
@@ -133,18 +133,20 @@
 					bottomBar.classList.add("hide");
 				}
 
-				this.close = function() {
+				this.close = function(_showBottomBar = true) {
 					this.openState = false;
 					HTML.Self.classList.add("hide");
+					
+					if (!_showBottomBar) return;
 					bottomBar.classList.remove("hide");
 				}
 
 				this.addIngredient = function() {
-					let ingredientCode = HTML.inputField.value.replace(/[^a-zA-Z0-9]/g, "");;
+					let ingredientCode = HTML.inputField.value.replace(/[^a-zA-Z0-9]/g, "");
 					for (ingredient of Mixer.ingredients)
 					{
 						if (ingredient.code != ingredientCode) continue;
-						this.close();
+						this.close(Mixer.ingredients.length != Mixer.addedIngredients.length + 1);
 						setTimeout(function () {Mixer.addIngredient(ingredient);}, 350);
 						return true;
 					}
@@ -251,7 +253,7 @@
 
 			(function() {
 				let progress = 0;
-				const target = 1200;
+				const target = 12000;
 				const minimumChange = .8;
 
 				window.addEventListener('devicemotion', function(event) {  
@@ -264,12 +266,14 @@
 				  mixPanCanvas.style.marginLeft = vx * 20 + "px";
 				  mixPanCanvas.style.transform = "rotateZ(" + vy * 4 + "deg)";
 
-				  if (Mixer.addedIngredients.length != Mixer.ingredients.length) return;
+				  if (Mixer.addedIngredients.length != Mixer.ingredients.length || progress == target) return;
 
 				  progress += Math.abs(vx) + Math.abs(vy);
 
 				  if (progress > target) progress = target;
 				  Mixer.mixPercentage = progress / target;
+				  
+				  if (progress == target) themeColour.content = "#5ad583";
 				  
 				  mixPercentageHolder.innerHTML = Math.round(Mixer.mixPercentage * 1000) / 10 + "%";
 				  Drawer.drawPan(Mixer.mixPercentage);
