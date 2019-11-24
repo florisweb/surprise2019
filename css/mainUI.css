@@ -31,6 +31,12 @@ html {
 #bottomBar {
 	bottom: 0;
 	padding-bottom: 30px;
+	transition: all .3s;
+}
+
+#bottomBar.hide {
+	bottom: -50px;
+	opacity: 0;
 }
 
 
@@ -71,6 +77,32 @@ html {
 	position: relative;
 	top: -5vh;
 	font-size: 30px !important;
+}
+
+
+
+
+
+
+.popup {
+	position: fixed;
+	top: calc(50vh - 80px);
+	left: 8%;
+	width: calc(84% - 20px * 2);
+
+	border-radius: 5px;
+	background: #fff;
+	box-shadow: 5px 5px 40px 30px rgba(0, 0, 0, .1);
+
+	padding: 20px 20px;
+
+	transition: all .3s;
+	z-index: 1000;
+}
+
+.popup.hide {
+	transform: scale(0);
+	opacity: 0;
 }
 
 
@@ -126,7 +158,14 @@ html {
 
 	border: 2px solid #f3f3f3;
 	outline: none;
+
+	transition: all .3s;
 }
+	.inputField.invalid {
+		border: 2px solid rgba(255, 0, 0, .5);
+		color: #f00;
+		background: rgba(255, 0, 0, .1);
+	}
 	.inputField.iBoxy {
 		border-radius: 3px;
 	}

@@ -39,6 +39,15 @@
 			  	100%   {transform: scale(0)}
 			}
 
+
+
+			
+			.popup .inputField {
+				position: relative;
+				width: calc(100% - 5px * 2);
+				padding: 0 5px;
+			}
+
 		</style>
 
 		<title>Mixer - Surprise 2019</title>
@@ -48,17 +57,23 @@
 			<a class="text mainHeader" id="mixPercentageHolder">0%</a>
 			<div class="centerAligner" id="mainContent">
 				<canvas id="mixPanCanvas" width="500" height="500"></canvas>
+				
+				<div class="popup hide">
+					<input class="inputField iBoxy text" placeholder="Ingedient-code">
+					<br>
+					<br>
+					<div class="button bDefault clickable bBoxy" style="width: 40%; margin: auto" onclick="Popup.addIngredient()">Toevoegen</div>
+				</div>
 			</div>
 			<img id="ingredientDropIn" class="drop">
 		</div>
 
-
 		<div id="bottomBar">
-			<div class="centerAligner" style="max-width: 160px">
-				<div class="button bDefault clickable" onclick="Mixer.addIngredient(Mixer.ingredients[Math.floor(Mixer.ingredients.length * Math.random())])">Voeg ingredient toe</div>
+			<div class="centerAligner" style="max-width: 160px;">
+				<div class="button bDefault clickable" onclick="Popup.open()">Voeg ingredient toe</div>
 			</div>
 		</div>
-		
+
 
 
 		<script>
@@ -95,6 +110,53 @@
 				}
 			}
 			
+
+
+
+
+			const Popup = new function() {
+				this.openState = false;
+				let HTML = {
+					Self: document.getElementsByClassName("popup")[0],
+				}
+				HTML.inputField = HTML.Self.children[0];
+
+
+				this.open = function() {
+					this.openState = true;
+					HTML.Self.classList.remove("hide");
+					
+					HTML.inputField.focus();
+					HTML.inputField.value = null;
+					HTML.inputField.classList.remove("invalid");
+					
+					bottomBar.classList.add("hide");
+				}
+
+				this.close = function() {
+					this.openState = false;
+					HTML.Self.classList.add("hide");
+					bottomBar.classList.remove("hide");
+				}
+
+				this.addIngredient = function() {
+					let ingredientCode = HTML.inputField.value.replace(/[^a-zA-Z0-9]/g, "");;
+					for (ingredient of Mixer.ingredients)
+					{
+						if (ingredient.code != ingredientCode) continue;
+						this.close();
+						setTimeout(function () {Mixer.addIngredient(ingredient);}, 350);
+						return true;
+					}
+
+					HTML.inputField.classList.add("invalid");
+					HTML.inputField.focus();
+					return false;
+				}
+			}
+
+
+
 
 
 			const Drawer = new function() {
