@@ -94,6 +94,7 @@
 			const Mixer = new function() {
 				this.mixPercentage = 0;
 
+				this.deegCode = "23412";
 				this.ingredients = [
 					{name: "Ei", code: "1233", imageUrl: "images/egg.png", substanceColour: "#fa0", size: 1},
 					{name: "Boter", code: "1234", imageUrl: "images/boter.png", substanceColour: "#fc5", size: 2},
@@ -259,7 +260,7 @@
 
 			(function() {
 				let progress = 0;
-				const target = 12000;
+				const target = 1200;
 				const minimumChange = .8;
 
 				window.addEventListener('devicemotion', function(event) {  
@@ -279,11 +280,16 @@
 				  if (progress > target) progress = target;
 				  Mixer.mixPercentage = progress / target;
 				  
-				  if (progress == target) themeColour.content = "#5ad583";
+				  if (progress == target) finishedMixing();
 				  
 				  mixPercentageHolder.innerHTML = Math.round(Mixer.mixPercentage * 1000) / 10 + "%";
 				  Drawer.drawPan(Mixer.mixPercentage);
 				});
+
+				function finishedMixing() {
+					actionIndicator.innerHTML = "De deeg-code is <strong>" + Mixer.deegCode + "</strong>";
+					themeColour.content = "#5ad583";
+				}
 			})();
 		</script>
 
