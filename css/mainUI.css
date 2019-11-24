@@ -67,6 +67,16 @@ html {
 
 
 
+.mainHeader {
+	position: relative;
+	top: -5vh;
+	font-size: 30px !important;
+}
+
+
+
+
+
 
 
 
@@ -123,6 +133,20 @@ html {
 
 
 
+
+.text {
+	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+	color: #999;
+	font-size: 15px;
+}
+
+
+.text.header {
+	font-family: Verdana, Geneva, sans-serif;
+	color: #888;
+	font-size: 14px;
+	font-weight: bolder !important;
+}
 
 
 

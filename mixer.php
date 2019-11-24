@@ -12,22 +12,31 @@
 
 			#mixPanCanvas {
 				position: relative;
-				top: calc(((100vh - 30px * 2 - 10px * 2 * 2 - 30px) - 80vw) / 2);
+				top: calc((100vh - 30px * 2 - 10px * 2 * 2 - 30px) / 2 - 60vw / 2 - 10vh);
 				width: calc(60vw);
 				height: auto;
 			}
+
+
+
 			
 			#ingredientDropIn {
-				position: absolute;
-				left: calc(50vw - 20vw);
-				top: -50vh;
+				position: fixed;
+				left: calc(50vw - 40vw / 2);
+				top: calc(50vh - 40vw / 2 - 10vh);
 				width: calc(40vw);
 				height: auto;
-				transition: all .3s;
 			}
 
 			#ingredientDropIn.drop {
-				top: 30vh;
+				animation: dropAnimation .5s 1;
+				animation-fill-mode: forwards;
+			}
+
+			@keyframes dropAnimation {
+			    0%   {transform: scale(1); opacity: 0}
+			    50%   {transform: scale(1.8); opacity: 1;}
+			  	100%   {transform: scale(0)}
 			}
 
 		</style>
@@ -36,10 +45,11 @@
 	</head>
 	<body>
 		<div id="mainContentHolder">
+			<a class="text mainHeader" id="mixPercentageHolder">0%</a>
 			<div class="centerAligner" id="mainContent">
-				<img id="ingredientDropIn" class="drop">
 				<canvas id="mixPanCanvas" width="500" height="500"></canvas>
 			</div>
+			<img id="ingredientDropIn" class="drop">
 		</div>
 
 
@@ -48,7 +58,7 @@
 				<div class="button bDefault clickable" onclick="Mixer.addIngredient(Mixer.ingredients[Math.floor(Mixer.ingredients.length * Math.random())])">Voeg ingredient toe</div>
 			</div>
 		</div>
-		<a id="info" style="position: fixed;">hey</a>
+		
 
 
 		<script>
@@ -63,17 +73,16 @@
 				this.addedIngredients = [];
 				
 				this.addIngredient = function(_ingredient) {
-					ingredientDropIn.style.transition = "all 0s";
 					ingredientDropIn.classList.remove("drop");
 					ingredientDropIn.setAttribute("src", _ingredient.imageUrl);
 					setTimeout(function () {
-						ingredientDropIn.style.transition = "";
 						ingredientDropIn.classList.add("drop");
-					}, 100);
+					}, 1);
 
 					if (getIngedientByCode(this.addedIngredients, _ingredient.code)) return;
 					this.addedIngredients.push(_ingredient);
-					Drawer.drawPan(this.mixPercentage);
+					
+					setTimeout(function () {Drawer.drawPan(Mixer.mixPercentage);}, 250);
 				}
 
 				function getIngedientByCode(_list, _code) {
@@ -96,7 +105,7 @@
 				const This = {
 					drawPan: drawPan,
 				}
-				
+
 				const sideWidth = 25;
 				const panHeight = Canvas.height - sideWidth;
 
@@ -111,7 +120,7 @@
 					ctx.fill();
 
 
-					drawIngedients(_mixPercentage);
+					if (Mixer.addedIngredients.length) drawIngedients(_mixPercentage);
 				}
 
 				function drawIngedients(_mixPercentage) {
@@ -122,9 +131,6 @@
 					let unitHeigth = fillHeight / totalUnitHeight;
 
 					let addedUnits = 0;
-
-
-
 					for (let i = 0; i < Mixer.addedIngredients.length; i++) 
 					{
 						let ingredient = Mixer.addedIngredients[i];
@@ -172,6 +178,8 @@
 					}
 				}
 
+
+				drawPan(0);
 				return This;
 			};
 
@@ -183,7 +191,6 @@
 				let progress = 0;
 				const target = 1200;
 				const minimumChange = .8;
-				let finished = false;
 
 				window.addEventListener('devicemotion', function(event) {  
 				  let vx = event.acceleration.x;
@@ -195,12 +202,14 @@
 				  mixPanCanvas.style.marginLeft = vx * 20 + "px";
 				  mixPanCanvas.style.transform = "rotateZ(" + vy * 4 + "deg)";
 
-				  progress += Math.abs(vx) + Math.abs(vy);
-				  if (progress / target > 1) finished = true;
-				  if (finished) return;
+				  if (Mixer.addedIngredients.length != Mixer.ingredients.length) return;
 
+				  progress += Math.abs(vx) + Math.abs(vy);
+
+				  if (progress > target) progress = target;
 				  Mixer.mixPercentage = progress / target;
-				  info.innerHTML = Math.round(Mixer.mixPercentage * 1000) / 10; + "%";
+				  
+				  mixPercentageHolder.innerHTML = Math.round(Mixer.mixPercentage * 1000) / 10 + "%";
 				  Drawer.drawPan(Mixer.mixPercentage);
 				});
 			})();
