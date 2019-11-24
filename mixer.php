@@ -17,6 +17,16 @@
 				height: auto;
 			}
 
+			#actionIndicator {
+				position: relative;
+				animation: actionIndicatorAnimation 2s 100;
+			}
+			@keyframes actionIndicatorAnimation {
+			    0%   {opacity: .6}
+			    50%  {opacity: 1}
+			  	100% {opacity: .6}
+			}
+
 
 
 			
@@ -53,9 +63,12 @@
 		<title>Mixer - Surprise 2019</title>
 	</head>
 	<body>
-		<img id="panImageHolder" src="images/pan.png">
+		<img id="panImageHolder" src="images/pan.png" onload="Drawer.drawPan(0)">
 		<div id="mainContentHolder">
 			<a class="text mainHeader" id="mixPercentageHolder">0%</a>
+			<br>
+			<a class="text" id="actionIndicator">Voeg eerst ingredienten toe</a>
+
 			<div class="centerAligner" id="mainContent">
 				<canvas id="mixPanCanvas" width="500" height="500"></canvas>
 				
@@ -138,7 +151,7 @@
 					this.openState = false;
 					HTML.Self.classList.add("hide");
 					
-					if (!_showBottomBar) return;
+					if (!_showBottomBar) return actionIndicator.innerHTML = "Schud om te mixen";
 					bottomBar.classList.remove("hide");
 				}
 
@@ -207,7 +220,7 @@
 
 					addedUnits = Mixer.addedIngredients[0].size;
 
-					const gradientHeight = 190 * _mixPercentage;
+					const gradientHeight = 160 * _mixPercentage;
 
 					for (let i = 1; i < Mixer.addedIngredients.length; i++) 
 					{
@@ -237,8 +250,6 @@
 					}
 				}
 
-
-				drawPan(0);
 				return This;
 			};
 
