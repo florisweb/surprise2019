@@ -63,7 +63,11 @@
 		<title>Mixer - Surprise 2019</title>
 	</head>
 	<body>
+		<script src="js/ovenPinger.js"></script>
+		<div class="text" id="alarmHeaderHolder"></div>
+
 		<img id="panImageHolder" src="images/pan.png" onload="Drawer.drawPan(0)">
+
 		<div id="mainContentHolder">
 			<a class="text mainHeader" id="mixPercentageHolder">0%</a>
 			<br>

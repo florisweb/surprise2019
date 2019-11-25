@@ -58,14 +58,17 @@
 				padding: 0 5px;
 			}
 			#imageHolder {display: none}
+
+		
 		</style>
 
 		<title>Oven - Surprise 2019</title>
 	</head>
 	<body>
 		<img id="imageHolder" src="images/oven.png" onload="Drawer.drawOven(360)">
+
 		<div id="mainContentHolder">
-			<a class="text mainHeader" id="percentageHolder">0%</a>
+			<a class="text mainHeader" id="percentageHolder"></a>
 			<br>
 			<a class="text" id="actionIndicator">Verwarm de oven eerst voor</a>
 
@@ -92,18 +95,13 @@
 			</div>
 		</div>
 
-		
-
+		<script src="js/ovenPinger.js"></script>
+		<br>
+		<button onclick="localStorage.ElisaSurprise_preStartTime = localStorage.ElisaSurprise_cakeStartTime = '';">Reset</button>
 
 		<script>
-			
 			const Oven = new function() {
-				this.preStartTime = new Date();
-				this.preLength = 600; // s
-				this.preProgress = 0;
-
 				this.isHeatingUp = false;
-
 
 				const stepSize = 1;
 
@@ -117,10 +115,11 @@
 					if (new Date() - lastSlowUpdate < 1000) return;
 					lastSlowUpdate = new Date();
 					
-					this.preProgress = (new Date() - this.preStartTime) / 1000 / this.preLength;
-					percentageHolder.innerHTML = Math.round(this.preProgress * 1000) / 10 + "%";
-					if (this.preProgress > 1) this.preProgress = 1;
+					percentageHolder.innerHTML = OvenPinger.timeText;
 				}
+
+			
+
 
 
 				this.startHeatingUp = function() {
@@ -128,19 +127,11 @@
 					
 					if (!localStorage.ElisaSurprise_preStartTime)
 					{
-						this.preStartTime = new Date();
 						localStorage.ElisaSurprise_preStartTime = new Date();
-					} else this.preStartTime = new Date(localStorage.ElisaSurprise_preStartTime);
+					}
 
 					bottomBar.classList.add("hide");
 					actionIndicator.innerHTML = "Kookwekker is gezet<br><strong style='color: red'>Zorg er voor dat je je geluid aan hebt staan</strong>";
-					setTimeout(Oven.playPingSound, 100);
-				}
-
-
-				this.playPingSound = function() {
-					var audio = new Audio('audio/ping.mp3');
-					audio.play();
 				}
 			}
 			
@@ -214,21 +205,10 @@
 					var img = document.getElementById("imageHolder");
   					ctx.drawImage(img, 0, 0, Canvas.width, Canvas.height);
   					
-
-  					let seconds = Oven.preLength - Oven.preProgress * Oven.preLength;
-  					let minutes = Math.floor(seconds / 60);
-  					seconds = Math.floor(seconds % 60);
-
-  					if (minutes < 10) minutes = "0" + minutes;
-  					if (seconds < 10) seconds = "0" + seconds;
-  					let text = "0:" + minutes + ":" + seconds;
-  					if (new Date().getSeconds() % 4 == 0 && Oven.isHeatingUp) text = "Pre";
-
-
   					ctx.fillStyle = "#444";
   					ctx.font = "26px Verdana";
   					ctx.textAlign = "center";
-  					ctx.fillText(text, 250, 85);
+  					ctx.fillText("00:" + OvenPinger.timeText, 250, 85);
   					ctx.fill();
 				}
 
@@ -245,7 +225,7 @@
 				for (let i = 0; i < width; i += flameWidth) prevFlameHeight[i] = maxFlameHeight * Math.random();
 
 				function drawOvenContents() {
-					let maxHeight = maxFlameHeight * Oven.preProgress;
+					let maxHeight = maxFlameHeight * OvenPinger.progress;
 					for (let i = 0; i < width; i += flameWidth)
 					{	
 						let flameRange = height * .05;
@@ -258,7 +238,7 @@
 						ctx.fillStyle = "rgba(" + 
 							(200 + 55 * Math.random()) + ", " + 
 							(50 + 80 * Math.random()) + ", " + 
-						"0, " +  (.5 + Oven.preProgress / 2) + ")";
+						"0, " +  (.5 + OvenPinger.progress / 2) + ")";
 
 						ctx.fillRect(startX + i, startY + height - flameHeight, flameWidth, flameHeight);
 						ctx.fill();
@@ -274,44 +254,14 @@
 			
 
 
-			(function() {
-				let progress = 0;
-				const target = 1200;
-				const minimumChange = .8;
-
-				window.addEventListener('devicemotion', function(event) {  
-				  // let vx = event.acceleration.x;
-				  // let vy = event.acceleration.y;
-
-				  // if (vx < minimumChange && vx > -minimumChange) vx = 0;
-				  // if (vy < minimumChange && vy > -minimumChange) vy = 0;
-
-				  // mixPanCanvas.style.marginLeft = vx * 20 + "px";
-				  // mixPanCanvas.style.transform = "rotateZ(" + vy * 4 + "deg)";
-
-				  // // if (Oven.addedIngredients.length != Oven.ingredients.length || progress == target) return;
-
-				  // progress += Math.abs(vx) + Math.abs(vy);
-
-				  // if (progress > target) progress = target;
-				  // Oven.mixPercentage = progress / target;
-				  
-				  // // if (progress == target) finishedMixing();
-				  
-				  // mixPercentageHolder.innerHTML = Math.round(Oven.mixPercentage * 1000) / 10 + "%";
-
-				  // Drawer.drawOven(Oven.voorverwarmMinuten);
-				});
 
 				function finishedMixing() {
 					actionIndicator.innerHTML = "De deeg-code is <strong>" + Oven.deegCode + "</strong>";
 					themeColour.content = "#5ad583";
 				}
-			})();
 
 			setInterval(function () {Oven.update();}, 100);
 		</script>
-
 
 	</body>
 </html>

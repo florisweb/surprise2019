@@ -190,3 +190,19 @@ html {
 
 
 
+
+
+
+
+
+
+
+
+#alarmHeaderHolder {
+	position: fixed;
+	left: 0;
+	top: 5px;
+	width: 100%;
+	text-align: center;
+	opacity: .5;
+}
