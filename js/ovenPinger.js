@@ -13,14 +13,14 @@ const OvenPinger = new function() {
 		if (localStorage.ElisaSurprise_preStartTime) 
 		{
 			OvenPinger.wekkerType = "Voorverwarm"; 
-			OvenPinger.wekkerLength = 60;
+			OvenPinger.wekkerLength = 100;
 			return new Date(localStorage.ElisaSurprise_preStartTime);
 		}
 
 		if (localStorage.ElisaSurprise_cakeStartTime) 
 		{
 			OvenPinger.wekkerType = "Bak"; 
-			OvenPinger.wekkerLength = 60;
+			OvenPinger.wekkerLength = 30;
 			return new Date(localStorage.ElisaSurprise_cakeStartTime);
 		}
 
@@ -54,7 +54,6 @@ const OvenPinger = new function() {
 		var audio = new Audio('audio/ping.mp3');
 		audio.play();
 	}
-
 
 
 	function secondsToText(seconds) {

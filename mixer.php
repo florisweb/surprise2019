@@ -87,7 +87,7 @@
 		</div>
 
 		<div id="bottomBar">
-			<div class="centerAligner" style="max-width: 160px;">
+			<div class="centerAligner" style="max-width: 160px;" id="ingredientButton">
 				<div class="button bDefault clickable" onclick="Popup.open()">Voeg ingredient toe</div>
 			</div>
 		</div>
@@ -149,15 +149,15 @@
 					HTML.inputField.value = null;
 					HTML.inputField.classList.remove("invalid");
 					
-					bottomBar.classList.add("hide");
+					ingredientButton.classList.add("hide");
 				}
 
-				this.close = function(_showBottomBar = true) {
+				this.close = function(_showIngredientButton = true) {
 					this.openState = false;
 					HTML.Self.classList.add("hide");
 					
-					if (!_showBottomBar) return actionIndicator.innerHTML = "Schud om te mixen";
-					bottomBar.classList.remove("hide");
+					if (!_showIngredientButton) return actionIndicator.innerHTML = "Schud om te mixen";
+					ingredientButton.classList.remove("hide");
 				}
 
 				this.addIngredient = function() {

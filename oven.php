@@ -59,6 +59,10 @@
 			}
 			#imageHolder {display: none}
 
+			
+			#bakeButton {
+				top: -50px;
+			}
 		
 		</style>
 
@@ -90,10 +94,15 @@
 		</div>
 
 		<div id="bottomBar">
-			<div class="centerAligner" style="max-width: 200px;">
+			<div class="centerAligner" style="max-width: 200px;" id="prepareButton">
 				<div class="button bDefault clickable" onclick="Oven.startHeatingUp()">Voorverwarmen (255*C)</div>
 			</div>
+			<br>
+			<div class="centerAligner hide" style="max-width: 200px;" id="bakeButton">
+				<div class="button bDefault clickable" onclick="Oven.startBaking()">Taart in oven doen</div>
+			</div>
 		</div>
+
 
 		<script src="js/ovenPinger.js"></script>
 		<br>
@@ -101,15 +110,11 @@
 
 		<script>
 			const Oven = new function() {
-				this.isHeatingUp = false;
-
-				const stepSize = 1;
-
-
+				this.isBurning = false;
 
 				let lastSlowUpdate = new Date();
 				this.update = function() {
-					if (!this.isHeatingUp) return;
+					if (!this.isBurning) return;
 					Drawer.drawOven();
 
 					if (new Date() - lastSlowUpdate < 1000) return;
@@ -123,18 +128,30 @@
 
 
 				this.startHeatingUp = function() {
-					this.isHeatingUp = true;
+					this.isBurning = true;
 					
-					if (!localStorage.ElisaSurprise_preStartTime)
-					{
-						localStorage.ElisaSurprise_preStartTime = new Date();
-					}
+					localStorage.ElisaSurprise_preStartTime = new Date();
+					localStorage.ElisaSurprise_timerType = "pre";
 
-					bottomBar.classList.add("hide");
-					actionIndicator.innerHTML = "Kookwekker is gezet<br><strong style='color: red'>Zorg er voor dat je je geluid aan hebt staan</strong>";
+					prepareButton.classList.add("hide");
+					bakeButton.classList.remove("hide");
+					actionIndicator.innerHTML = "Aan het voorverwarmen<br><strong style='color: red'>Zorg dat het geluid aan staat</strong>";
+				}
+
+				this.startBaking = function() {
+					this.isBurning = true;
+					bakeButton.classList.add("hide");
+					actionIndicator.innerHTML = "Aan het bakken<br><strong style='color: red'>Zorg dat het geluid aan staat</strong>";
 				}
 			}
 			
+
+
+
+
+
+
+
 
 
 

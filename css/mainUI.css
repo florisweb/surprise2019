@@ -34,10 +34,30 @@ html {
 	transition: all .3s;
 }
 
-#bottomBar.hide {
+#bottomBar .centerAligner {
+	float: bottom;
+	bottom: 0;
+	opacity: 1;
+}
+#bottomBar .centerAligner.hide {
 	bottom: -50px;
 	opacity: 0;
+	pointer-events: none;
 }
+
+
+.centerAligner {
+	position: relative;
+	margin: auto;
+	
+	width: auto;
+	max-width: 1000px;
+	height: 100%;
+
+	transition: all .3s;
+}
+
+
 
 
 
@@ -51,23 +71,7 @@ html {
 }
 
 
-#mainContent.centerAligner {
-}
 
-
-
-
-
-.centerAligner {
-	position: relative;
-	margin: auto;
-	
-	width: auto;
-	max-width: 1000px;
-	height: 100%;
-
-	transition: all .3s;
-}
 
 
 
