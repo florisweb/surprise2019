@@ -63,8 +63,21 @@
 		<title>Mixer - Surprise 2019</title>
 	</head>
 	<body>
-		<script src="js/ovenPinger.js"></script>
+		
 		<div class="text" id="alarmHeaderHolder"></div>
+		
+		<div class="popup ovenPinger hide">
+			<div class="text"></div>
+			<a href="oven.php">
+				<div class="button bDefault clickable bBoxy" style="width: 20%; margin: auto; text-decoration: none">Naar oven</div>
+			</a>
+		</div>
+
+		<script src="js/ovenPinger.js"></script>
+
+
+
+
 
 		<img id="panImageHolder" src="images/pan.png" onload="Drawer.drawPan(0)">
 

@@ -71,6 +71,8 @@
 	<body>
 		<img id="imageHolder" src="images/oven.png" onload="Drawer.drawOven(360)">
 
+
+
 		<div id="mainContentHolder">
 			<a class="text mainHeader" id="percentageHolder"></a>
 			<br>

@@ -2,6 +2,10 @@
 const OvenPinger = new function() {
 	this.wekkerType = false; // pre, cake
 	this.timeText = "";
+
+	const HTML = {
+		ovenPingerPopup: document.getElementsByClassName("popup ovenPinger")[0]
+	}
 	
 
 	this.setup = function() {
@@ -46,7 +50,12 @@ const OvenPinger = new function() {
 		} catch (e) {}
 		
 		if (new Date() - startTime < this.wekkerLength * 1000 ) return;
+
 		this.playPingSound();
+		
+		if (!HTML.ovenPingerPopup) return;
+		HTML.ovenPingerPopup.classList.remove("hide");
+		HTML.ovenPingerPopup.children[0].innerHTML = this.wekkerType + "en voltooid";
 	}
 
 
