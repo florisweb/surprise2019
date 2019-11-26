@@ -108,6 +108,11 @@
 
 
 		<script>
+			// Enable the 'are you sure you want to leave'-text
+			window.onbeforeunload = window.onunload = function() {
+				return false;
+			}
+
 			const Mixer = new function() {
 				this.mixPercentage = 0;
 
