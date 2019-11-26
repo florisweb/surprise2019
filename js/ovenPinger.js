@@ -76,7 +76,7 @@ const OvenPinger = new function() {
 		
 		if (!HTML.ovenPingerPopup) return;
 		HTML.ovenPingerPopup.classList.remove("hide");
-		HTML.ovenPingerPopup.children[0].innerHTML = this.wekkerType + "en voltooid";
+		HTML.ovenPingerPopup.children[0].innerHTML = OvenPinger.wekkerType + "en voltooid";
 	}
 
 	this.playPingSound = function() {
