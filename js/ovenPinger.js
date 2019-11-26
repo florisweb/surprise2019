@@ -20,15 +20,14 @@ const OvenPinger = new function() {
 
 		switch (status.stage) 
 		{
-			case "heating":
-			case "finishedHeating": 
+			case "heating": case "finishedHeating": 
 				OvenPinger.wekkerType = "Voorverwarm"; 
-				OvenPinger.wekkerLength = 20;
+				OvenPinger.wekkerLength = 60;
 				return new Date(status.startTime);
 			break;
 			case "baking": 
 				OvenPinger.wekkerType = "Bak"; 
-				OvenPinger.wekkerLength = 20;
+				OvenPinger.wekkerLength = 60;
 				return new Date(status.startTime);
 			break;
 			default: 
