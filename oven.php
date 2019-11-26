@@ -82,14 +82,10 @@
 				<canvas id="mixPanCanvas" width="500" height="500"></canvas>
 				
 				<div class="popup hide">
-					<input class="inputField iBoxy text" placeholder="Temperatuur" 
-						style="width: calc(100% - 50px); float: left"
-						onkeyup="this.value = this.value.replace(/[^0-9]/g, '');">
-					<div class="text" style="float: left; margin-left: 5px; margin-top: 7px">*C</div>
+					<input class="inputField iBoxy text" placeholder="Taart-code">
 					<br>
 					<br>
-					<br>
-					<div class="button bDefault clickable bBoxy" style="width: 60%; margin: auto" onclick="Popup.addIngredient()">Start voorverwarmen</div>
+					<div class="button bDefault clickable bBoxy" style="width: 60%; margin: auto" onclick="Popup.putCakeInOven()">Taart in oven</div>
 				</div>
 			</div>
 			<img id="ingredientDropIn" class="drop">
@@ -101,7 +97,7 @@
 			</div>
 			<br>
 			<div class="centerAligner hide" style="max-width: 200px;" id="bakeButton">
-				<div class="button bDefault clickable" onclick="Oven.startBaking()">Taart in oven doen</div>
+				<div class="button bDefault clickable" onclick="Popup.open()">Taart in oven doen</div>
 			</div>
 		</div>
 
@@ -112,6 +108,7 @@
 
 		<script>
 			const Oven = new function() {
+				this.cakeCode = "12342";
 				this.isBurning = false;
 				this.status;
 
@@ -139,9 +136,11 @@
 				}
 
 				this.startBaking = function() {
+					Popup.close();
 					this.isBurning = true;
-					bakeButton.classList.add("hide");
-					actionIndicator.innerHTML = "Aan het bakken<br><strong style='color: red'>Zorg dat het geluid aan staat</strong>";
+
+					localStorage.ElisaSurprise_status = JSON.stringify({stage: "baking", startTime: new Date()});
+					this.updateOvenStatus();
 				}
 
 				this.updateOvenStatus = function() {
@@ -164,12 +163,10 @@
 						break;
 						case "baking": 
 							this.isBurning = true;
-							
+							actionIndicator.innerHTML = "Aan het bakken<br><strong style='color: red'>Zorg dat het geluid aan staat</strong>";
 						break;
-						default: 
-							return false;
-						break
 					}
+					return true;
 				}	
 			}
 			
@@ -184,48 +181,41 @@
 
 
 
-			// const Popup = new function() {
-			// 	this.openState = false;
-			// 	let HTML = {
-			// 		Self: document.getElementsByClassName("popup")[0],
-			// 	}
-			// 	HTML.inputField = HTML.Self.children[0];
+			const Popup = new function() {
+				this.openState = false;
+				let HTML = {
+					Self: document.getElementsByClassName("popup")[0],
+				}
+				HTML.inputField = HTML.Self.children[0];
 
 
-			// 	this.open = function() {
-			// 		this.openState = true;
-			// 		HTML.Self.classList.remove("hide");
+				this.open = function() {
+					this.openState = true;
+					HTML.Self.classList.remove("hide");
 					
-			// 		HTML.inputField.focus();
-			// 		HTML.inputField.value = null;
-			// 		HTML.inputField.classList.remove("invalid");
+					HTML.inputField.focus();
+					HTML.inputField.value = null;
+					HTML.inputField.classList.remove("invalid");
 					
-			// 		bottomBar.classList.add("hide");
-			// 	}
+					bottomBar.classList.add("hide");
+				}
 
-			// 	this.close = function(_showBottomBar = true) {
-			// 		this.openState = false;
-			// 		HTML.Self.classList.add("hide");
+				this.close = function(_showBottomBar = true) {
+					this.openState = false;
+					HTML.Self.classList.add("hide");
 					
-			// 		if (!_showBottomBar) return actionIndicator.innerHTML = "Schud om te mixen";
-			// 		bottomBar.classList.remove("hide");
-			// 	}
+					if (!_showBottomBar) return actionIndicator.innerHTML = "Schud om te mixen";
+					bottomBar.classList.remove("hide");
+				}
 
-			// 	this.addIngredient = function() {
-			// 		let ingredientCode = HTML.inputField.value.replace(/[^a-zA-Z0-9]/g, "");
-			// 		for (ingredient of Oven.ingredients)
-			// 		{
-			// 			if (ingredient.code != ingredientCode) continue;
-			// 			this.close(Oven.ingredients.length != Oven.addedIngredients.length + 1);
-			// 			setTimeout(function () {Oven.addIngredient(ingredient);}, 350);
-			// 			return true;
-			// 		}
-
-			// 		HTML.inputField.classList.add("invalid");
-			// 		HTML.inputField.focus();
-			// 		return false;
-			// 	}
-			// }
+				this.putCakeInOven = function() {
+					let cakeCode = HTML.inputField.value.replace(/[^a-zA-Z0-9]/g, "");
+					if (cakeCode == Oven.cakeCode) return Oven.startBaking();
+					HTML.inputField.classList.add("invalid");
+					HTML.inputField.focus();
+					return false;
+				}
+			}
 
 
 
@@ -272,8 +262,14 @@
 				for (let i = 0; i < width; i += flameWidth) prevFlameHeight[i] = maxFlameHeight * Math.random();
 
 				function drawOvenContents() {
-					let progress = 0;
 					if (!Oven.status) return;
+					drawFlames();
+
+					if (Oven.status.stage == "baking") drawCake();
+				}
+
+				function drawFlames() {
+					let progress = 0;
 					if (Oven.status.stage == "heating") progress = OvenPinger.progress;
 					if (Oven.status.stage == "finishedHeating" || Oven.status.stage == "baking") progress = 1;
 
@@ -294,9 +290,34 @@
 
 						ctx.fillRect(startX + i, startY + height - flameHeight, flameWidth, flameHeight);
 						ctx.fill();
-					} 
+					}
+				}
+				
+				function drawCake() {
+					ctx.fillStyle = "#222";
+					ctx.fillRect(startX, startY + 150, width, 5);
+					ctx.fillRect(startX, startY + 157, width, 5);
+					ctx.fill();
+
+					const cakeWidth = 200;
+					const cakeY = startY + 98;
+					const cakePerspective = 5;
 
 
+					ctx.fillStyle = "#555";
+					ctx.fillRect(startX + (width - cakeWidth) / 2, cakeY, cakeWidth, 50);
+
+					ctx.fillStyle = "#777";
+					ctx.beginPath();
+					ctx.ellipse(startX + width / 2, cakeY, cakeWidth / 2, cakePerspective, 0, -Math.PI, Math.PI);
+					ctx.closePath();
+					ctx.fill();
+
+					ctx.fillStyle = "#555";			
+					ctx.beginPath();
+					ctx.ellipse(startX + width / 2, cakeY + 50, cakeWidth / 2, cakePerspective, 0, 0, Math.PI);
+					ctx.closePath();
+					ctx.fill();
 				}
 
 				return This;
