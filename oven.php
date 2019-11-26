@@ -157,7 +157,7 @@
 							this.isBurning = true;
 						break;
 						case "finishedHeating": 
-							bakeButton.classList.remove("hide");
+							if (!Popup.openState) bakeButton.classList.remove("hide");
 							actionIndicator.innerHTML = "Stop de taart in de oven<br><strong style='color: red'>Zorg dat het geluid aan staat</strong>";
 							this.isBurning = true;
 						break;
@@ -197,15 +197,13 @@
 					HTML.inputField.value = null;
 					HTML.inputField.classList.remove("invalid");
 					
-					bottomBar.classList.add("hide");
+					bakeButton.classList.add("hide");
 				}
 
-				this.close = function(_showBottomBar = true) {
+				this.close = function() {
 					this.openState = false;
 					HTML.Self.classList.add("hide");
-					
-					if (!_showBottomBar) return actionIndicator.innerHTML = "Schud om te mixen";
-					bottomBar.classList.remove("hide");
+					bakeButton.classList.remove("hide");
 				}
 
 				this.putCakeInOven = function() {
@@ -304,16 +302,19 @@
 					const cakePerspective = 5;
 
 
-					ctx.fillStyle = "#555";
+					ctx.fillStyle = "#777";
 					ctx.fillRect(startX + (width - cakeWidth) / 2, cakeY, cakeWidth, 50);
 
-					ctx.fillStyle = "#777";
+					ctx.fillStyle = "#c80";
+					ctx.strokeStyle = "#888";
+					ctx.lineWidth = 3;
 					ctx.beginPath();
 					ctx.ellipse(startX + width / 2, cakeY, cakeWidth / 2, cakePerspective, 0, -Math.PI, Math.PI);
 					ctx.closePath();
 					ctx.fill();
+					ctx.stroke();
 
-					ctx.fillStyle = "#555";			
+					ctx.fillStyle = "#777";			
 					ctx.beginPath();
 					ctx.ellipse(startX + width / 2, cakeY + 50, cakeWidth / 2, cakePerspective, 0, 0, Math.PI);
 					ctx.closePath();
