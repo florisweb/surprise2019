@@ -69,7 +69,7 @@
 		<div class="popup ovenPinger hide">
 			<div class="text"></div>
 			<a href="oven.php">
-				<div class="button bDefault clickable bBoxy" style="width: 20%; margin: auto; text-decoration: none">Naar oven</div>
+				<img class="toOvenIcon" src="images/toOvenIcon.png">
 			</a>
 		</div>
 
@@ -149,7 +149,7 @@
 			const Popup = new function() {
 				this.openState = false;
 				let HTML = {
-					Self: document.getElementsByClassName("popup")[0],
+					Self: document.getElementsByClassName("popup")[1],
 				}
 				HTML.inputField = HTML.Self.children[0];
 
