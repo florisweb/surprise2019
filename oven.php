@@ -69,7 +69,7 @@
 		<title>Oven - Surprise 2019</title>
 	</head>
 	<body>
-		<img id="imageHolder" src="images/oven.png" onload="Drawer.drawOven(360)">
+		<img id="imageHolder" src="images/oven.png" onload="Drawer.drawOven()">
 
 
 
@@ -117,8 +117,8 @@
 
 				let lastSlowUpdate = new Date();
 				this.update = function() {
-					if (!this.isBurning) return;
 					Drawer.drawOven();
+					if (!this.isBurning) return;
 
 					if (new Date() - lastSlowUpdate < 1000) return;
 					lastSlowUpdate = new Date();
@@ -145,7 +145,6 @@
 				}
 
 				this.updateOvenStatus = function() {
-					Drawer.drawOven();
 					if (!localStorage.ElisaSurprise_status) return;
 					this.status = JSON.parse(localStorage.ElisaSurprise_status);
 
@@ -161,6 +160,7 @@
 						case "finishedHeating": 
 							bakeButton.classList.remove("hide");
 							actionIndicator.innerHTML = "Stop de taart in de oven<br><strong style='color: red'>Zorg dat het geluid aan staat</strong>";
+							this.isBurning = true;
 						break;
 						case "baking": 
 							this.isBurning = true;
@@ -253,7 +253,9 @@
   					ctx.fillStyle = "#444";
   					ctx.font = "26px Verdana";
   					ctx.textAlign = "center";
-  					ctx.fillText("00:" + OvenPinger.timeText, 250, 85);
+  					let text = OvenPinger.timeText;
+  					if (!text) text = "00:00";
+  					ctx.fillText("00:" + text, 250, 85);
   					ctx.fill();
 				}
 
@@ -270,10 +272,10 @@
 				for (let i = 0; i < width; i += flameWidth) prevFlameHeight[i] = maxFlameHeight * Math.random();
 
 				function drawOvenContents() {
-					let progress = 1;
+					let progress = 0;
 					if (!Oven.status) return;
 					if (Oven.status.stage == "heating") progress = OvenPinger.progress;
-
+					if (Oven.status.stage == "finishedHeating" || Oven.status.stage == "baking") progress = 1;
 
 					let maxHeight = maxFlameHeight * progress;
 					for (let i = 0; i < width; i += flameWidth)

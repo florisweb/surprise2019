@@ -20,7 +20,8 @@ const OvenPinger = new function() {
 
 		switch (status.stage) 
 		{
-			case "heating": 
+			case "heating":
+			case "finishedHeating": 
 				OvenPinger.wekkerType = "Voorverwarm"; 
 				OvenPinger.wekkerLength = 20;
 				return new Date(status.startTime);
@@ -43,6 +44,8 @@ const OvenPinger = new function() {
 		lastSlowUpdate = new Date();
 
 		let startTime = getStartTimeFromLocalStorage();
+		if (!startTime) return setAlarmHeaderHolderText("");
+
 
 		this.progress = 1 - (OvenPinger.wekkerLength - (new Date() - startTime) / 1000) / OvenPinger.wekkerLength;
 		if (this.progress > 1) this.progress = 1;
@@ -50,9 +53,7 @@ const OvenPinger = new function() {
 		this.timeText = secondsToText((1 - this.progress) * this.wekkerLength);
 		
 		let text = this.wekkerType + "-wekker: " + this.timeText;
-		try {
-			alarmHeaderHolder.innerHTML = text;
-		} catch (e) {}
+		setAlarmHeaderHolderText(text);
 		
 		if (new Date() - startTime < this.wekkerLength * 1000) return;
 
@@ -64,6 +65,11 @@ const OvenPinger = new function() {
 		localStorage.ElisaSurprise_status = JSON.stringify(status);
 	}
 
+	function setAlarmHeaderHolderText(_text) {
+		try {
+			alarmHeaderHolder.innerHTML = _text;
+		} catch (e) {}
+	}
 
 	function sendAlarmNotification() {
 		OvenPinger.playPingSound();
