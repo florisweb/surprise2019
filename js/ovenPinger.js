@@ -14,21 +14,26 @@ const OvenPinger = new function() {
 
 	function getStartTimeFromLocalStorage() {
 		OvenPinger.wekkerLength = Infinity;
-		if (localStorage.ElisaSurprise_preStartTime) 
-		{
-			OvenPinger.wekkerType = "Voorverwarm"; 
-			OvenPinger.wekkerLength = 100;
-			return new Date(localStorage.ElisaSurprise_preStartTime);
-		}
 
-		if (localStorage.ElisaSurprise_cakeStartTime) 
-		{
-			OvenPinger.wekkerType = "Bak"; 
-			OvenPinger.wekkerLength = 30;
-			return new Date(localStorage.ElisaSurprise_cakeStartTime);
-		}
+		if (!localStorage.ElisaSurprise_status) return false;
+		let status = JSON.parse(localStorage.ElisaSurprise_status);
 
-		return false;
+		switch (status.stage) 
+		{
+			case "heating": 
+				OvenPinger.wekkerType = "Voorverwarm"; 
+				OvenPinger.wekkerLength = 20;
+				return new Date(status.startTime);
+			break;
+			case "baking": 
+				OvenPinger.wekkerType = "Bak"; 
+				OvenPinger.wekkerLength = 20;
+				return new Date(status.startTime);
+			break;
+			default: 
+				return false;
+			break
+		}
 	}	
 
 
@@ -49,15 +54,24 @@ const OvenPinger = new function() {
 			alarmHeaderHolder.innerHTML = text;
 		} catch (e) {}
 		
-		if (new Date() - startTime < this.wekkerLength * 1000 ) return;
+		if (new Date() - startTime < this.wekkerLength * 1000) return;
 
-		this.playPingSound();
+		
+		sendAlarmNotification();
+
+		let status = JSON.parse(localStorage.ElisaSurprise_status);
+		if (status.stage == "heating") status.stage = "finishedHeating";
+		localStorage.ElisaSurprise_status = JSON.stringify(status);
+	}
+
+
+	function sendAlarmNotification() {
+		OvenPinger.playPingSound();
 		
 		if (!HTML.ovenPingerPopup) return;
 		HTML.ovenPingerPopup.classList.remove("hide");
 		HTML.ovenPingerPopup.children[0].innerHTML = this.wekkerType + "en voltooid";
 	}
-
 
 	this.playPingSound = function() {
 		var audio = new Audio('audio/ping.mp3');
