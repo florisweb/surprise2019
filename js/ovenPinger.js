@@ -60,7 +60,8 @@ const OvenPinger = new function() {
 		sendAlarmNotification();
 
 		let status = JSON.parse(localStorage.ElisaSurprise_status);
-		if (status.stage == "heating") status.stage = "finishedHeating";
+		if (status.stage == "heating") 	status.stage = "finishedHeating";
+		if (status.stage == "baking") 	status.stage = "finishedBaking";
 		localStorage.ElisaSurprise_status = JSON.stringify(status);
 	}
 

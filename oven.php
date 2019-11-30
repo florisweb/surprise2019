@@ -30,28 +30,6 @@
 
 
 			
-			#ingredientDropIn {
-				position: fixed;
-				left: calc(50vw - 40vw / 2);
-				top: calc(50vh - 40vw / 2 - 10vh);
-				width: calc(40vw);
-				height: auto;
-			}
-
-			#ingredientDropIn.drop {
-				animation: dropAnimation .5s 1;
-				animation-fill-mode: forwards;
-			}
-
-			@keyframes dropAnimation {
-			    0%   {transform: scale(1); opacity: 0}
-			    50%   {transform: scale(1.8); opacity: 1;}
-			  	100%   {transform: scale(0)}
-			}
-
-
-
-			
 			.popup .inputField {
 				position: relative;
 				width: calc(100% - 5px * 2);
@@ -88,7 +66,6 @@
 					<div class="button bDefault clickable bBoxy" style="width: 60%; margin: auto" onclick="Popup.putCakeInOven()">Taart in oven</div>
 				</div>
 			</div>
-			<img id="ingredientDropIn" class="drop">
 		</div>
 
 		<div id="bottomBar">
@@ -143,6 +120,11 @@
 					this.updateOvenStatus();
 				}
 
+				this.showFinishedBakingMessage = function() {
+					actionIndicator.innerHTML = "Klaar met bakken! <br><strong>Haal de 'taart' uit opa's oven. (Real life)</strong>";
+					themeColour.content = "#5ad583";
+				}
+
 				this.updateOvenStatus = function() {
 					if (!localStorage.ElisaSurprise_status) return;
 					this.status = JSON.parse(localStorage.ElisaSurprise_status);
@@ -164,6 +146,10 @@
 						case "baking": 
 							this.isBurning = true;
 							actionIndicator.innerHTML = "Aan het bakken<br><strong style='color: red'>Zorg dat het geluid aan staat</strong>";
+						break;
+						case "finishedBaking": 
+							this.isBurning = false;
+							Oven.showFinishedBakingMessage();
 						break;
 					}
 					return true;
@@ -263,7 +249,7 @@
 					if (!Oven.status) return;
 					drawFlames();
 
-					if (Oven.status.stage == "baking") drawCake();
+					if (Oven.status.stage == "baking" || Oven.status.stage == "finishedBaking") drawCake();
 				}
 
 				function drawFlames() {
@@ -325,14 +311,6 @@
 			};
 
 
-			
-
-
-
-				function finishedMixing() {
-					actionIndicator.innerHTML = "De deeg-code is <strong>" + Oven.deegCode + "</strong>";
-					themeColour.content = "#5ad583";
-				}
 
 
 
