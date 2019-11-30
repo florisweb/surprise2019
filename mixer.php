@@ -180,17 +180,27 @@
 
 				this.addIngredient = function() {
 					let ingredientCode = HTML.inputField.value.replace(/[^a-zA-Z0-9]/g, "");
-					for (ingredient of Mixer.ingredients)
-					{
-						if (ingredient.code != ingredientCode) continue;
-						this.close(Mixer.ingredients.length != Mixer.addedIngredients.length + 1);
-						setTimeout(function () {Mixer.addIngredient(ingredient);}, 350);
-						return true;
-					}
+					
+					let ingredient = getIngredientByCode(ingredientCode, Mixer.ingredients);
+					if (!ingredient) return indicateRequestInvalid();
+					if (getIngredientByCode(ingredientCode, Mixer.addedIngredients)) return indicateRequestInvalid();
 
+					this.close(Mixer.ingredients.length != Mixer.addedIngredients.length + 1);
+					setTimeout(function () {Mixer.addIngredient(ingredient);}, 350);
+				}
+
+				function getIngredientByCode(_ingredientCode, _arr) {
+					for (ingredient of _arr)
+					{
+						if (ingredient.code != _ingredientCode) continue;
+						return ingredient;
+					}
+					return false;
+				}
+
+				function indicateRequestInvalid() {
 					HTML.inputField.classList.add("invalid");
 					HTML.inputField.focus();
-					return false;
 				}
 			}
 
