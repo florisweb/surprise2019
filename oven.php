@@ -82,7 +82,7 @@
 
 		<script>
 			const Oven = new function() {
-				this.cakeCode = "12342";
+				this.cakeCode = "80000";
 				this.isBurning = false;
 				this.status;
 

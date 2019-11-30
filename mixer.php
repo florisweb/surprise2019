@@ -116,11 +116,11 @@
 			const Mixer = new function() {
 				this.mixPercentage = 0;
 
-				this.deegCode = "23412";
+				this.deegCode = "45102";
 				this.ingredients = [
-					{name: "Ei", code: "1233", imageUrl: "images/egg.png", substanceColour: "#fa0", size: 1},
-					{name: "Boter", code: "1234", imageUrl: "images/boter.png", substanceColour: "#fc5", size: 2},
-					{name: "Appeltaartmix", code: "1235", imageUrl: "images/mix.png", substanceColour: "#edc", size: 3}
+					{code: "85493", imageUrl: "images/egg.png", substanceColour: "#fa0", size: 1},
+					{code: "23489", imageUrl: "images/boter.png", substanceColour: "#fc5", size: 2},
+					{code: "73247", imageUrl: "images/mix.png", substanceColour: "#edc", size: 3}
 				];
 				this.addedIngredients = [];
 				
