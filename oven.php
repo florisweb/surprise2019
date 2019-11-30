@@ -28,14 +28,11 @@
 			}
 
 
-
-			
 			.popup .inputField {
 				position: relative;
 				width: calc(100% - 5px * 2);
 				padding: 0 5px;
 			}
-			#imageHolder {display: none}
 
 			
 			#bakeButton {
